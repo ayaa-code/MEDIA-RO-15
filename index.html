@@ -264,6 +264,25 @@
             letter-spacing: clamp(1px, 0.5vw, 2px);
         }
 
+        .progress-info {
+            text-align: center;
+        }
+
+        .progress-label {
+            font-size: clamp(7px, 1.5vw, 9px);
+            font-weight: bold;
+            color: #7EC8E3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: clamp(2px, 1vw, 4px);
+        }
+
+        #progress-bar {
+            font-weight: bold;
+            font-size: clamp(12px, 3vw, 16px);
+            color: #2C5F7F;
+        }
+
         .game-main {
             flex-grow: 1;
             display: flex;
@@ -274,85 +293,58 @@
             position: relative;
         }
 
-        .monopoly-board {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(5, 1fr);
-            gap: clamp(4px, 1vw, 6px);
-            background: #E8F4F8;
-            padding: clamp(8px, 2vw, 12px);
-            border-radius: 15px;
-            width: min(85vh, 95vw);
-            height: min(85vh, 95vw);
+        .adventure-map {
+            background: url('https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/indonesia-map.png') no-repeat center center;
+            background-size: cover;
+            width: min(90vh, 95vw);
+            height: min(90vh, 95vw);
             aspect-ratio: 1 / 1;
             position: relative;
+            border-radius: 15px;
             border: clamp(4px, 1vw, 6px) solid #FFCB99;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
         }
 
-        .tile {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border: clamp(2px, 0.5vw, 3px) solid #B8D4E8;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            font-weight: 800;
-            position: relative;
-            padding: clamp(4px, 1vw, 6px) clamp(4px, 1vw, 6px) clamp(6px, 1.5vw, 8px) clamp(4px, 1vw, 6px);
-            text-align: center;
-            transition: all 0.3s ease;
-            font-size: clamp(9px, 1.5vw, 11px);
-            line-height: 1.05;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 5px rgba(0,0,0,0.2);
-            border-radius: 4px;
-            min-height: clamp(50px, 10vw, 60px);
-            word-break: break-word;
-        }
-
-        .tile:hover {
-            transform: translateY(-3px);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 6px 15px rgba(126, 200, 227, 0.4);
-        }
-
-        .tile span {
-            position: relative;
-            z-index: 10;
-            margin-top: 0;
-            display: block;
-            max-width: 95%;
-            word-wrap: break-word;
-            font-size: 10px;
-        }
-
-        .tile-header {
+        .map-point {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 0;
-            width: 100%;
-            border-radius: 2px 2px 0 0;
-            display: none;
+            width: clamp(40px, 8vw, 60px);
+            height: clamp(40px, 8vw, 60px);
+            background: radial-gradient(circle, #FFD700 0%, #FFA500 70%, transparent 100%);
+            border: 3px solid #FF4500;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: clamp(12px, 2.5vw, 16px);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            transition: all 0.3s ease;
+            z-index: 10;
         }
 
-        .side-top .tile-header { display: none; }
-        .side-right .tile-header { display: none; }
-        .side-bottom .tile-header { display: none; }
-        .side-left .tile-header { display: none; }
-        .corner-tile { 
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border: 3px solid #B8D4E8;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 5px rgba(0,0,0,0.2);
-            border-radius: 4px;
+        .map-point:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
         }
-        
-        .corner-tile .tile-header {
-            display: none;
+
+        .map-point.active {
+            background: radial-gradient(circle, #00FF00 0%, #32CD32 70%, transparent 100%);
+            border-color: #228B22;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .map-point.completed {
+            background: radial-gradient(circle, #87CEEB 0%, #4682B4 70%, transparent 100%);
+            border-color: #1E90FF;
         }
 
         .player-token {
@@ -1063,7 +1055,7 @@
                 </div>
             </div>
             <div class="location-info">
-                <div class="location-label">Lokasi</div>
+                <div class="location-label">Destinasi</div>
                 <div id="current-loc">-</div>
             </div>
         </div>
@@ -1071,21 +1063,22 @@
             <div class="stamina-label">Stamina</div>
             <div id="life-icons">❤️❤️❤️❤️❤️</div>
         </div>
+        <div class="progress-info">
+            <div class="progress-label">Progress</div>
+            <div id="progress-bar">0 / 15</div>
+        </div>
     </header>
 
     <!-- GAME BOARD -->
     <main class="game-main">
-        <div id="board" class="monopoly-board">
-            <div class="center-area">
-                <img src="https://raw.githubusercontent.com/riyanarahman320/26/main/BANDUNG.png" alt="Resonance Odyssey" class="center-image">
-            </div>
-            <div id="player-token" class="player-token hidden"></div>
+        <div id="board" class="adventure-map">
+            <!-- Map points will be added by JavaScript -->
         </div>
 
-        <!-- Control Button (kanan saja) -->
+        <!-- Control Button -->
         <div id="move-btn-ctrl" class="control-group hidden">
             <div class="btn-dir-container">
-                <button class="btn-dir" id="btn-right" onclick="handleRight()">▶</button>
+                <button class="btn-dir" id="btn-next" onclick="nextDestination()">LANJUT</button>
             </div>
         </div>
     </main>
@@ -1123,70 +1116,190 @@
             penyihir: `<img src="https://raw.githubusercontent.com/riyanarahman320/c2FraXQgdGF1dSwgZ2EgYWRpbCByYXNhbnlh/1ebe956e0bd17ef70dfd976a88c07dc5efe4664e/SUMBAR.png" style="width: 100%; height: auto; max-width: 120px; display: block; margin: 0 auto;" alt="SUMBAR"/>`
         };
 
-        const cityData = [
-            { name: "Mulai", side: "corner", music: "" },
-            { name: "Jawa Barat", side: "side-top", music: "https://raw.githubusercontent.com/riyanarahman320/c2FraXQgdGF1dSwgZ2EgYWRpbCByYXNhbnlh/b7a423f967be69ca19239d650b05b841ddcb5158/Manuk%20Dadali%20(Angklung%20version%20cover)%20Arr%20(mp3cut.net).mp3" },
-            { name: "Jawa Tengah", side: "side-top", music: "https://raw.githubusercontent.com/riyanarahman320/c2FraXQgdGF1dSwgZ2EgYWRpbCByYXNhbnlh/b7a423f967be69ca19239d650b05b841ddcb5158/GAMELAN.mp3" },
-            { name: "DI Yogyakarta", side: "side-top", image: "https://raw.githubusercontent.com/riyanarahman320/c2FraXQgdGF1dSwgZ2EgYWRpbCByYXNhbnlh/0b044c022fd512bf01f22ef1dc2474e0893f62f7/JOGJA.png", music: "https://raw.githubusercontent.com/riyanarahman320/c2FraXQgdGF1dSwgZ2EgYWRpbCByYXNhbnlh/0b044c022fd512bf01f22ef1dc2474e0893f62f7/SITAR.mp3" },
-            { name: "Bali", side: "corner", image: "https://raw.githubusercontent.com/riyanarahman320/c2FraXQgdGF1dSwgZ2EgYWRpbCByYXNhbnlh/e57ec7031a0fdba39923804793d4528ed2617d21/BALI.png", music: "https://raw.githubusercontent.com/riyanarahman320/c2FraXQgdGF1dSwgZ2EgYWRpbCByYXNhbnlh/e57ec7031a0fdba39923804793d4528ed2617d21/Rindik%2C%20the%20Balinese%20musical%20instrument.mp3" },
-            { name: "Sumatra Barat", side: "side-right", music: "" },
-            { name: "Aceh", side: "side-right", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/ACEH.png", music: "https://raw.githubusercontent.com/AYAA-lab/Game-Resonance-Odyssey/main/freesound_community-seruling-sunda-34162.mp3" },
-            { name: "Sumatera Utara", side: "side-right", music: "" },
-            { name: "Riau", side: "corner", music: "" },
-            { name: "Kalimantan Timur", side: "side-bottom", music: "" },
-            { name: "Kalimantan Selatan", side: "side-bottom", music: "" },
-            { name: "Sulawesi Selatan", side: "side-bottom", music: "" },
-            { name: "Sulawesi Utara", side: "corner", music: "" },
-            { name: "NTB", side: "side-left", music: "" },
-            { name: "NTT", side: "side-left", music: "" },
-            { name: "Papua", side: "side-left", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/PAPUA.png", music: "https://raw.githubusercontent.com/AYAA-lab/Game-Resonance-Odyssey/main/freesound_community-seruling-sunda-34162.mp3" }
+        const daerahData = [
+            {
+                id: 1,
+                daerah: "Jawa Barat",
+                alatMusik: "Angklung",
+                soal: "Alat musik tradisional dari Jawa Barat yang dimainkan dengan digoyangkan adalah ...",
+                opsi: ["Gamelan", "Angklung", "Tifa", "Sasando"],
+                jawaban: "Angklung",
+                x: 120,
+                y: 340,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/jawa-barat.png"
+            },
+            {
+                id: 2,
+                daerah: "Jawa Tengah",
+                alatMusik: "Gamelan",
+                soal: "Ansambel musik tradisional Jawa yang didominasi metalofon dan gong disebut ...",
+                opsi: ["Angklung", "Gamelan", "Tifa", "Sasando"],
+                jawaban: "Gamelan",
+                x: 180,
+                y: 360,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/jawa-tengah.png"
+            },
+            {
+                id: 3,
+                daerah: "Jawa Timur",
+                alatMusik: "Gambang",
+                soal: "Alat musik petik tradisional Jawa Timur yang dimainkan dengan dipetik menggunakan jari adalah ...",
+                opsi: ["Angklung", "Gamelan", "Gambang", "Sasando"],
+                jawaban: "Gambang",
+                x: 240,
+                y: 380,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/jawa-timur.png"
+            },
+            {
+                id: 4,
+                daerah: "Bali",
+                alatMusik: "Gamelan Bali",
+                soal: "Musik vokal laki-laki di Bali yang menirukan suara instrumen gamelan tanpa alat musik disebut ...",
+                opsi: ["Kecak", "Jegog", "Genggong", "Barong"],
+                jawaban: "Kecak",
+                x: 280,
+                y: 420,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/bali.png"
+            },
+            {
+                id: 5,
+                daerah: "Sumatera Barat",
+                alatMusik: "Saluang",
+                soal: "Alat musik tiup tradisional dari Sumatera Barat yang terbuat dari bambu disebut ...",
+                opsi: ["Angklung", "Saluang", "Tifa", "Sasando"],
+                jawaban: "Saluang",
+                x: 80,
+                y: 200,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/sumbar.png"
+            },
+            {
+                id: 6,
+                daerah: "Sumatera Utara",
+                alatMusik: "Gondang",
+                soal: "Musik tradisional Sumatera Utara yang menggunakan gendang dan seruling disebut ...",
+                opsi: ["Gondang", "Angklung", "Tifa", "Sasando"],
+                jawaban: "Gondang",
+                x: 100,
+                y: 180,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/sumut.png"
+            },
+            {
+                id: 7,
+                daerah: "Aceh",
+                alatMusik: "Rapai",
+                soal: "Kesenian Aceh yang memadukan vokal, tepuk tangan, dan bantal kecil sebagai perkusi disebut ...",
+                opsi: ["Didong", "Saman", "Rapai", "Seudati"],
+                jawaban: "Rapai",
+                x: 60,
+                y: 160,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/aceh.png"
+            },
+            {
+                id: 8,
+                daerah: "Kalimantan Selatan",
+                alatMusik: "Gambus",
+                soal: "Alat musik petik khas Kalimantan Selatan yang mirip dengan kecapi disebut ...",
+                opsi: ["Angklung", "Gamelan", "Gambus", "Sasando"],
+                jawaban: "Gambus",
+                x: 320,
+                y: 280,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/kalsel.png"
+            },
+            {
+                id: 9,
+                daerah: "Kalimantan Timur",
+                alatMusik: "Sampe",
+                soal: "Alat musik petik khas suku Dayak yang bentuk dasarnya mirip gitar tanpa fret adalah ...",
+                opsi: ["Sampe", "Sasando", "Jentreng", "Kecapi"],
+                jawaban: "Sampe",
+                x: 360,
+                y: 260,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/kaltim.png"
+            },
+            {
+                id: 10,
+                daerah: "Sulawesi Selatan",
+                alatMusik: "Gandrang Bulo",
+                soal: "Musik perkusi yang mengiringi tarian komedi penuh energi asal Sulawesi Selatan disebut ...",
+                opsi: ["Gandrang Bulo", "Sinrilik", "Pakarena", "Kacaping"],
+                jawaban: "Gandrang Bulo",
+                x: 400,
+                y: 320,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/sulsel.png"
+            },
+            {
+                id: 11,
+                daerah: "Sulawesi Utara",
+                alatMusik: "Kolintang",
+                soal: "Alat musik perkusi kayu yang dipukul dan disusun rapi, khas suku Minahasa di Manado disebut ...",
+                opsi: ["Kolintang", "Gendang", "Tifa", "Rebana"],
+                jawaban: "Kolintang",
+                x: 420,
+                y: 200,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/sulut.png"
+            },
+            {
+                id: 12,
+                daerah: "Nusa Tenggara Barat",
+                alatMusik: "Genggong",
+                soal: "Alat musik tiup tradisional dari pelepah pohon enau yang ditarik talinya, khas suku Sasak Lombok disebut ...",
+                opsi: ["Genggong", "Seruling", "Nafiri", "Saronen"],
+                jawaban: "Genggong",
+                x: 300,
+                y: 460,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/ntb.png"
+            },
+            {
+                id: 13,
+                daerah: "Nusa Tenggara Timur",
+                alatMusik: "Sasando",
+                soal: "Alat musik petik tradisional Nusa Tenggara Timur yang terbuat dari daun lontar disebut ...",
+                opsi: ["Angklung", "Gamelan", "Tifa", "Sasando"],
+                jawaban: "Sasando",
+                x: 340,
+                y: 480,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/ntt.png"
+            },
+            {
+                id: 14,
+                daerah: "Maluku",
+                alatMusik: "Tifa",
+                soal: "Alat musik pukul utama yang terbuat dari kayu bulat dan kulit binatang, khas Maluku disebut ...",
+                opsi: ["Tifa", "Jimbe", "Bongo", "Bedug"],
+                jawaban: "Tifa",
+                x: 460,
+                y: 380,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/maluku.png"
+            },
+            {
+                id: 15,
+                daerah: "Papua",
+                alatMusik: "Tifa Papua",
+                soal: "Alat musik pukul tradisional Papua yang digunakan dalam upacara adat disebut ...",
+                opsi: ["Angklung", "Gamelan", "Tifa", "Sasando"],
+                jawaban: "Tifa",
+                x: 500,
+                y: 300,
+                background: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/main/papua.png"
+            }
         ];
 
-        const cityQuestions = {
-            1: { q: "Musik orkestra Betawi yang dipengaruhi budaya Eropa dan menggunakan alat musik tiup logam disebut?", a: ["Tanjidor", "Gambang Kromong", "Keroncong", "Marawis"], correct: 0 },
-            2: { q: "Alat musik bambu asal Jawa Barat yang dimainkan dengan cara digoyangkan adalah?", a: ["Angklung", "Calung", "Suling", "Kecapi"], correct: 0 },
-            3: { q: "Genre musik khas Cirebon-Indramayu yang namanya singkatan dari 'Gitar' dan 'Suling' adalah?", a: ["Tarling", "Degung", "Sindenan", "Tayub"], correct: 0 },
-            4: { q: "Ansambel musik tradisional Jawa yang didominasi metalofon dan gong disebut?", a: ["Gamelan", "Kulintang", "Talempong", "Sasando"], correct: 0 },
-            5: { q: "Aliran musik yang menggunakan instrumen flute, biola, dan cak-cuk (ukulele) yang populer di Solo adalah?", a: ["Keroncong", "Campursari", "Dangdut", "Langgam"], correct: 0 },
-            6: { q: "Kesenian drama tradisional Jawa Timur yang diiringi musik gamelan bertempo cepat disebut?", a: ["Ludruk", "Ketoprak", "Wayang Orang", "Lenong"], correct: 0 },
-            7: { q: "Musik vokal laki-laki di Bali yang menirukan suara instrumen gamelan tanpa alat musik disebut?", a: ["Kecak", "Jegog", "Genggong", "Barong"], correct: 0 },
-            8: { q: "Alat musik tiup tradisional dari pelepah pohon enau yang ditarik talinya, khas suku Sasak Lombok?", a: ["Genggong", "Seruling", "Nafiri", "Saronen"], correct: 0 },
-            9: { q: "Musik perkusi yang mengiringi tarian komedi penuh energi asal Sulawesi Selatan disebut?", a: ["Gandrang Bulo", "Sinrilik", "Pakarena", "Kacaping"], correct: 0 },
-            10: { q: "Alat musik perkusi kayu yang dipukul dan disusun rapi, khas suku Minahasa di Manado?", a: ["Kolintang", "Gendang", "Tifa", "Rebana"], correct: 0 },
-            11: { q: "Ambon dijuluki 'City of Music'. Alat musik pukul utama yang terbuat dari kayu bulat dan kulit binatang adalah?", a: ["Tifa", "Jimbe", "Bongo", "Bedug"], correct: 0 },
-            12: { q: "Musik religi di Ternate yang menggunakan rebana untuk mengiringi puji-pujian disebut?", a: ["Hadrah", "Samrah", "Qasidah", "Zapin"], correct: 0 },
-            13: { q: "Alat musik petik khas suku Dayak yang bentuk dasarnya mirip gitar tanpa fret adalah?", a: ["Sampe", "Sasando", "Jentreng", "Kecapi"], correct: 0 },
-            14: { q: "Musik khas Kalimantan yang menggunakan alat musik pukul dari logam mirip gamelan disebut?", a: ["Kliningan", "Talempong", "Gamelan Banjar", "Karungut"], correct: 2 },
-            15: { q: "Kesenian Aceh yang memadukan vokal, tepuk tangan, dan bantal kecil sebagai perkusi disebut?", a: ["Didong", "Saman", "Seudati", "Rapa'i"], correct: 0 }
-        };
 
-        const gridCoords = [
-            [1,1], [1,2], [1,3], [1,4], [1,5], 
-            [2,5], [3,5], [4,5], [5,5], 
-            [5,4], [5,3], [5,2], [5,1], 
-            [4,1], [3,1], [2,1]
-        ];
 
         let state = {
             playerName: '',
             schoolName: '',
-            idx: 0,
+            currentDaerah: 0, // 0 = start, 1-15 = daerah
             lives: 5,
             charId: '',
             active: false,
             isMoving: false,
             visited: new Set(),
             currentQuiz: null,
-            autoMode: false,
-            autoPaused: false,
-            autoTimer: null,
-            currentAudio: null,
-            answers: [] // Array untuk track jawaban per soal: {questionId, correct, answer}
+            answers: []
         };
         
-        const TRAVEL_DURATION = 5000; // 5 seconds untuk perjalanan (agar musik bisa dimainkan)
 
-        let audioContext = null;
 
         function playSound(frequency, duration, type = 'sine') {
             try {
@@ -1270,139 +1383,114 @@
             document.getElementById('top-status').classList.remove('hidden');
             document.getElementById('move-btn-ctrl').classList.remove('hidden');
             
-            const playerToken = document.getElementById('player-token');
+            const board = document.getElementById('board');
+            const playerToken = document.createElement('div');
+            playerToken.id = 'player-token';
+            playerToken.className = 'player-token';
             playerToken.innerHTML = charAssets[charId];
-            playerToken.classList.remove('hidden');
+            board.appendChild(playerToken);
             
             document.getElementById('display-player-name').innerText = state.playerName;
             document.getElementById('status-avatar').innerHTML = charAssets[charId];
             
             updateTokenPos();
-            updateControlButtons();
         }
 
         function initBoard() {
             const board = document.getElementById('board');
-            const defaultImage = 'https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/JAKARTA.png';
             
-            cityData.forEach((city, i) => {
-                if (i === 0) return;
-                
-                    const tile = document.createElement('div');
-                    tile.className = `tile ${city.side === 'corner' ? 'corner-tile' : city.side}`;
-                    tile.id = `tile-${i}`;
-                    tile.style.gridRow = gridCoords[i][0];
-                    tile.style.gridColumn = gridCoords[i][1];
-                    let inner = `<span style="z-index: 10;">${city.name}</span>`;
-
-                    // Set background image - use city.image if available, otherwise use default JAKARTA.png
-                    const imageUrl = city.image || defaultImage;
-                    tile.style.backgroundImage = `url(${imageUrl})`;
-
-                    tile.innerHTML = inner;
-                    board.appendChild(tile);
+            daerahData.forEach((daerah, index) => {
+                const point = document.createElement('div');
+                point.className = 'map-point';
+                point.id = `point-${daerah.id}`;
+                point.innerText = daerah.id;
+                point.style.left = `${daerah.x}px`;
+                point.style.top = `${daerah.y}px`;
+                point.onclick = () => {
+                    if (state.active && !state.isMoving && state.currentDaerah + 1 === daerah.id) {
+                        moveToDaerah(daerah.id);
+                    }
+                };
+                board.appendChild(point);
             });
         }
 
         function updateTokenPos() {
             const token = document.getElementById('player-token');
-            const coord = gridCoords[state.idx];
-            
-            const centerX = (coord[1] - 0.5) * 20;
-            const centerY = (coord[0] - 0.5) * 20;
-            
-            token.style.left = `${centerX}%`;
-            token.style.top = `${centerY}%`;
+            if (state.currentDaerah === 0) {
+                // Start position, maybe center
+                token.style.left = '50%';
+                token.style.top = '50%';
+                token.style.transform = 'translate(-50%, -50%)';
+            } else {
+                const daerah = daerahData[state.currentDaerah - 1];
+                token.style.left = `${daerah.x + 20}px`; // offset for center
+                token.style.top = `${daerah.y + 20}px`;
+                token.style.transform = 'translate(-50%, -50%)';
+            }
             
             document.getElementById('life-icons').innerText = "❤️".repeat(Math.max(0, state.lives));
-            document.getElementById('current-loc').innerText = cityData[state.idx].name;
+            document.getElementById('current-loc').innerText = state.currentDaerah === 0 ? "Start" : daerahData[state.currentDaerah - 1].daerah;
+            document.getElementById('progress-bar').innerText = `${state.currentDaerah} / 15`;
             
-            document.querySelectorAll('.tile').forEach(t => t.style.boxShadow = '');
-            const currentTile = document.getElementById(`tile-${state.idx}`);
-            if (currentTile) {
-                currentTile.style.boxShadow = '0 0 15px #ec4899, inset 0 0 15px rgba(236, 72, 153, 0.3)';
-            }
-        }
-
-        function handleMove(dir) {
-            if (!state.active || state.isMoving) return;
-            let move = 0;
-            const i = state.idx;
-
-            // Top row (0-3): normal horizontal movement
-            if (i >= 0 && i < 4) {
-                if (dir === 'right') move = 1;
-                if (dir === 'left') move = -1;
-            }
-            // Corner: Jogja (index 4) - top right corner
-            // Bisa gerak LEFT (ke Cirebon) atau DOWN (ke Solo)
-            else if (i === 4) {
-                if (dir === 'left') move = -1;   // Ke Cirebon (index 3)
-                if (dir === 'down') move = 1;    // Ke Solo (index 5)
-            }
-            // Right side (5-7): normal vertical movement
-            else if (i > 4 && i < 8) {
-                if (dir === 'down') move = 1;
-                if (dir === 'up') move = -1;
-            }
-            // Corner: Lombok (index 8) - right bottom corner
-            // Bisa gerak UP (ke Bali) atau LEFT (ke Makassar)
-            else if (i === 8) {
-                if (dir === 'up') move = -1;    // Ke Bali (index 7)
-                if (dir === 'left') move = 1;   // Ke Makassar (index 9)
-            }
-            // Bottom row (9-11): horizontal movement (reversed)
-            else if (i > 8 && i < 12) {
-                if (dir === 'left') move = 1;
-                if (dir === 'right') move = -1;
-            }
-            // Corner: Ternate (index 12) - bottom left corner
-            // Bisa gerak RIGHT (ke Ambon) atau UP (ke Papua)
-            else if (i === 12) {
-                if (dir === 'right') move = -1;  // Ke Ambon (index 11)
-                if (dir === 'up') move = 1;      // Ke Papua (index 13)
-            }
-            // Left side (13-15): vertical movement (reversed)
-            else if (i >= 13) {
-                if (dir === 'up') move = 1;
-                if (dir === 'down') move = -1;
-            }
-
-            if (move === 0) return;
-            state.isMoving = true;
-            state.idx = (state.idx + move + 16) % 16;
-            updateTokenPos();
-            updateControlButtons();
-
-            // Putar musik perjalanan ke kota ini
-            playTravelMusic(state.idx);
-
-            setTimeout(() => {
-                if (!state.visited.has(state.idx)) {
-                    state.visited.add(state.idx);
-                    showQuiz();
-                } else {
-                    state.isMoving = false;
+            // Update point classes
+            document.querySelectorAll('.map-point').forEach((point, index) => {
+                point.classList.remove('active', 'completed');
+                if (index + 1 === state.currentDaerah + 1) {
+                    point.classList.add('active');
+                } else if (index + 1 <= state.currentDaerah) {
+                    point.classList.add('completed');
                 }
-            }, TRAVEL_DURATION);
+            });
         }
 
-        function showQuiz() {
-            // Hentikan musik perjalanan saat quiz muncul
-            if (state.currentAudio) {
-                state.currentAudio.pause();
-                state.currentAudio.currentTime = 0;
-            }
+        function moveToDaerah(daerahId) {
+            if (state.isMoving) return;
+            state.isMoving = true;
             
-            state.currentQuiz = cityQuestions[state.idx];
+            const daerah = daerahData.find(d => d.id === daerahId);
+            if (!daerah) return;
             
-            if (!state.currentQuiz) {
-                state.isMoving = false;
-                return;
-            }
+            // Animate movement
+            const token = document.getElementById('player-token');
+            const startX = parseFloat(token.style.left) || 50;
+            const startY = parseFloat(token.style.top) || 50;
+            const endX = daerah.x + 20;
+            const endY = daerah.y + 20;
+            
+            // Simple animation
+            token.style.transition = 'all 2s ease-in-out';
+            token.style.left = `${endX}px`;
+            token.style.top = `${endY}px`;
+            
+            setTimeout(() => {
+                state.currentDaerah = daerahId;
+                state.visited.add(daerahId);
+                updateTokenPos();
+                
+                // Show quiz after arrival
+                setTimeout(() => {
+                    showQuiz(daerah);
+                    state.isMoving = false;
+                }, 500);
+            }, 2000);
+        }
 
+        function nextDestination() {
+            if (state.currentDaerah < 15) {
+                moveToDaerah(state.currentDaerah + 1);
+            }
+        }
+
+        function showQuiz(daerah) {
+            state.currentQuiz = {
+                q: daerah.soal,
+                a: daerah.opsi,
+                correct: daerah.opsi.indexOf(daerah.jawaban)
+            };
+            
             const overlay = document.getElementById('quiz-overlay');
-            document.getElementById('quiz-header').innerText = `TANTANGAN MUSIK: ${cityData[state.idx].name}`;
+            document.getElementById('quiz-header').innerText = `TANTANGAN MUSIK: ${daerah.daerah}`;
             document.getElementById('quiz-question').innerText = state.currentQuiz.q;
             
             document.getElementById('quiz-feedback-box').classList.remove('show');
@@ -1418,8 +1506,6 @@
                 container.appendChild(btn);
             });
             
-            // pause auto-walk while quiz is shown
-            state.autoPaused = true;
             overlay.classList.add('show');
         }
 
@@ -1427,10 +1513,10 @@
             document.querySelectorAll('.quiz-opt-btn').forEach(b => b.disabled = true);
             
             // Record jawaban
-            const questionId = state.idx;
+            const questionId = state.currentDaerah;
             state.answers.push({
                 questionId: questionId,
-                cityName: cityData[questionId].name,
+                daerahName: daerahData[state.currentDaerah - 1].daerah,
                 correct: correct,
                 timestamp: new Date().toISOString()
             });
@@ -1465,20 +1551,12 @@
 
             setTimeout(() => {
                 document.getElementById('quiz-overlay').classList.remove('show');
-                state.isMoving = false;
                 if (state.lives <= 0) {
                     finish(false);
-                } else if (state.visited.size === cityData.length) {
+                } else if (state.currentDaerah === 15) {
                     finish(true);
                 }
                 updateTokenPos();
-                // resume auto if it was running before quiz
-                if (state.autoMode) {
-                    state.autoPaused = false;
-                    if (state.autoTimer) clearTimeout(state.autoTimer);
-                    state.autoTimer = setTimeout(autoStep, 300);
-                }
-                updateControlButtons();
             }, 2000);
         }
 
@@ -1500,7 +1578,7 @@
             
             // Detail jawaban per soal (dalam format JSON untuk satu field)
             const answersDetail = state.answers.map(answer => 
-                `${answer.cityName}: ${answer.correct ? 'Benar' : 'Salah'}`
+                `${answer.daerahName}: ${answer.correct ? 'Benar' : 'Salah'}`
             ).join(' | ');
             formData.append('entry.674416243', answersDetail); // Detail Jawaban
             
@@ -1535,88 +1613,7 @@
             overlay.classList.add('show');
         }
 
-        function handleRight() {
-            // toggle auto mode: if already auto, stop; otherwise start auto-walk clockwise
-            if (state.autoMode) {
-                stopAuto();
-            } else {
-                startAuto();
-            }
-        }
 
-        function playTravelMusic(cityIdx) {
-            // Stop musik yang sedang dimainkan
-            if (state.currentAudio) {
-                state.currentAudio.pause();
-                state.currentAudio.currentTime = 0;
-            }
-            
-            // Jika ada musik untuk kota ini, putar
-            if (cityIdx < cityData.length && cityData[cityIdx].music) {
-                state.currentAudio = new Audio(cityData[cityIdx].music);
-                state.currentAudio.volume = 0.5; // volume 50%
-                state.currentAudio.play().catch(e => console.log('Musik tidak bisa diputar:', e));
-            }
-        }
-
-        function startAuto() {
-            if (state.autoMode) return;
-            state.autoMode = true;
-            state.autoPaused = false;
-            state.autoTimer = setTimeout(autoStep, 300);
-            updateControlButtons();
-        }
-
-        function stopAuto() {
-            state.autoMode = false;
-            state.autoPaused = false;
-            if (state.autoTimer) {
-                clearTimeout(state.autoTimer);
-                state.autoTimer = null;
-            }
-            updateControlButtons();
-        }
-
-        function autoStep() {
-            if (!state.autoMode || state.autoPaused) return;
-            const lastIdx = cityData.length - 1;
-            if (state.idx === lastIdx) {
-                stopAuto();
-                return;
-            }
-
-            state.isMoving = true;
-            state.idx = (state.idx + 1) % cityData.length;
-            updateTokenPos();
-            updateControlButtons();
-
-            // Putar musik perjalanan
-            playTravelMusic(state.idx);
-
-            state.autoTimer = setTimeout(() => {
-                if (!state.visited.has(state.idx)) {
-                    state.visited.add(state.idx);
-                    state.autoPaused = true;
-                    showQuiz();
-                } else {
-                    state.isMoving = false;
-                    if (state.autoMode && !state.autoPaused && state.idx !== lastIdx) {
-                        state.autoTimer = setTimeout(autoStep, 300);
-                    } else if (state.idx === lastIdx) {
-                        stopAuto();
-                    }
-                }
-            }, TRAVEL_DURATION);
-        }
-
-        function updateControlButtons() {
-            const btn = document.getElementById('btn-right');
-            if (!btn) return;
-            const i = state.idx;
-            // right is valid on top row and bottom row
-            const canRight = (i >= 0 && i <= 4) || (i >= 9 && i <= 12);
-            btn.disabled = !state.active || state.isMoving || !canRight;
-        }
 
         window.addEventListener('keydown', (e) => {
             if (e.key === "ArrowRight") handleMove('right');
