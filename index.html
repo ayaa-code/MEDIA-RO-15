@@ -1125,8 +1125,8 @@
         <div class="content-card">
             <img id="preview-image" src="" alt="Preview Area" class="preview-image">
             <h2 id="preview-title"></h2>
-            <p id="preview-subtitle">Kamu telah sampai di satu wilayah baru. Siapkan dirimu untuk tantangan musik berikutnya!</p>
-            <button class="btn-gold" onclick="closeAreaPreview()">LANJUTKAN</button>
+            <p id="preview-subtitle">Kamu telah sampai di satu wilayah baru. Tekan tombol untuk masuk ke pertanyaan musik.</p>
+            <button class="btn-gold" onclick="closeAreaPreview()">MASUK KE SOAL</button>
         </div>
     </div>
 
@@ -1220,7 +1220,6 @@
             autoMode: false,
             autoPaused: false,
             autoTimer: null,
-            previewTimer: null,
             currentAudio: null,
             answers: [] // Array untuk track jawaban per soal: {questionId, correct, answer}
         };
@@ -1664,16 +1663,11 @@
 
             state.autoPaused = true;
             overlay.classList.add('show');
-            state.previewTimer = setTimeout(closeAreaPreview, 1800);
         }
 
         function closeAreaPreview() {
             const overlay = document.getElementById('area-preview-overlay');
             overlay.classList.remove('show');
-            if (state.previewTimer) {
-                clearTimeout(state.previewTimer);
-                state.previewTimer = null;
-            }
             showQuiz();
         }
 
