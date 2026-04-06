@@ -442,6 +442,36 @@
         }
 
         /* Quiz Overlay */
+        #area-preview-overlay {
+            display: none;
+        }
+
+        #area-preview-overlay.show {
+            display: flex !important;
+        }
+
+        #area-preview-overlay .preview-image {
+            width: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+            max-height: clamp(220px, 35vh, 320px);
+            margin-bottom: clamp(14px, 3vw, 18px);
+        }
+
+        #preview-title {
+            color: #2C5F7F;
+            font-weight: 900;
+            font-size: clamp(22px, 5vw, 30px);
+            margin-bottom: clamp(10px, 2vw, 12px);
+        }
+
+        #preview-subtitle {
+            color: #5EB3D6;
+            font-size: clamp(13px, 2.8vw, 16px);
+            margin-bottom: clamp(18px, 3vw, 22px);
+            line-height: 1.4;
+        }
+
         #quiz-overlay {
             display: none;
         }
@@ -1090,6 +1120,16 @@
         </div>
     </main>
 
+    <!-- AREA PREVIEW OVERLAY -->
+    <div id="area-preview-overlay" class="screen-overlay">
+        <div class="content-card">
+            <img id="preview-image" src="" alt="Preview Area" class="preview-image">
+            <h2 id="preview-title"></h2>
+            <p id="preview-subtitle">Kamu telah sampai di satu wilayah baru. Siapkan dirimu untuk tantangan musik berikutnya!</p>
+            <button class="btn-gold" onclick="closeAreaPreview()">LANJUTKAN</button>
+        </div>
+    </div>
+
     <!-- QUIZ OVERLAY -->
     <div id="quiz-overlay" class="screen-overlay">
         <div class="content-card">
@@ -1180,11 +1220,13 @@
             autoMode: false,
             autoPaused: false,
             autoTimer: null,
+            previewTimer: null,
             currentAudio: null,
             answers: [] // Array untuk track jawaban per soal: {questionId, correct, answer}
         };
         
         const TRAVEL_DURATION = 5000; // 5 seconds untuk perjalanan (agar musik bisa dimainkan)
+        const DEFAULT_PREVIEW_IMAGE = 'https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/JAKARTA.png';
 
         let audioContext = null;
 
@@ -1380,7 +1422,7 @@
             setTimeout(() => {
                 if (!state.visited.has(state.idx)) {
                     state.visited.add(state.idx);
-                    showQuiz();
+                    showAreaPreview();
                 } else {
                     state.isMoving = false;
                 }
@@ -1597,7 +1639,7 @@
                 if (!state.visited.has(state.idx)) {
                     state.visited.add(state.idx);
                     state.autoPaused = true;
-                    showQuiz();
+                    showAreaPreview();
                 } else {
                     state.isMoving = false;
                     if (state.autoMode && !state.autoPaused && state.idx !== lastIdx) {
@@ -1607,6 +1649,32 @@
                     }
                 }
             }, TRAVEL_DURATION);
+        }
+
+        function showAreaPreview() {
+            const city = cityData[state.idx] || {};
+            const overlay = document.getElementById('area-preview-overlay');
+            const image = document.getElementById('preview-image');
+            const title = document.getElementById('preview-title');
+            const subtitle = document.getElementById('preview-subtitle');
+
+            image.src = city.image || DEFAULT_PREVIEW_IMAGE;
+            title.innerText = city.name || 'Wilayah Baru';
+            subtitle.innerText = `Kamu telah sampai di ${city.name}. Siapkan dirimu untuk tantangan musik berikutnya!`;
+
+            state.autoPaused = true;
+            overlay.classList.add('show');
+            state.previewTimer = setTimeout(closeAreaPreview, 1800);
+        }
+
+        function closeAreaPreview() {
+            const overlay = document.getElementById('area-preview-overlay');
+            overlay.classList.remove('show');
+            if (state.previewTimer) {
+                clearTimeout(state.previewTimer);
+                state.previewTimer = null;
+            }
+            showQuiz();
         }
 
         function updateControlButtons() {
